@@ -288,12 +288,14 @@ protected:
 public :
    TGeoCombiTrans();
    TGeoCombiTrans(const TGeoMatrix &other);
+   TGeoCombiTrans(const TGeoCombiTrans &other);
    TGeoCombiTrans(const TGeoTranslation &tr, const TGeoRotation &rot);
    TGeoCombiTrans(const char *name);
    TGeoCombiTrans(Double_t dx, Double_t dy, Double_t dz, TGeoRotation *rot);
    TGeoCombiTrans(const char *name, Double_t dx, Double_t dy, Double_t dz, TGeoRotation *rot);
 
    TGeoCombiTrans& operator  =(const TGeoMatrix &matrix);
+   TGeoCombiTrans& operator  =(const TGeoCombiTrans &matrix);
    TGeoCombiTrans &operator *=(const TGeoMatrix &other);
    TGeoCombiTrans  operator  *(const TGeoMatrix &other) const;
    Bool_t          operator ==(const TGeoMatrix &other) const;

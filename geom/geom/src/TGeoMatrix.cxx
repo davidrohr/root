@@ -1645,6 +1645,24 @@ TGeoCombiTrans::TGeoCombiTrans(const TGeoMatrix &other)
    else fRotation = 0;
 }
 
+TGeoCombiTrans::TGeoCombiTrans(const TGeoCombiTrans &other)
+               :TGeoMatrix(other)
+{
+   Int_t i;
+   if (other.IsTranslation()) {
+      SetBit(kGeoTranslation);
+      memcpy(fTranslation,other.GetTranslation(),kN3);
+   } else {
+      for (i=0; i<3; i++) fTranslation[i] = 0.0;
+   }
+   if (other.IsRotation()) {
+      SetBit(kGeoRotation);
+      SetBit(kGeoMatrixOwned);
+      fRotation = new TGeoRotation(other);
+   }
+   else fRotation = 0;
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 /// Constructor from a translation and a rotation.
 
@@ -1702,6 +1720,39 @@ TGeoCombiTrans::TGeoCombiTrans(const char *name, Double_t dx, Double_t dy, Doubl
 /// Assignment operator.
 
 TGeoCombiTrans &TGeoCombiTrans::operator=(const TGeoMatrix &matrix)
+{
+   if (&matrix == this) return *this;
+   Bool_t registered = TestBit(kGeoRegistered);
+   TNamed::operator=(matrix);
+   Clear();
+
+   if (matrix.IsTranslation()) {
+      SetBit(kGeoTranslation);
+      memcpy(fTranslation,matrix.GetTranslation(),kN3);
+   }
+   if (matrix.IsRotation()) {
+      SetBit(kGeoRotation);
+      if (!fRotation) {
+         fRotation = new TGeoRotation();
+         SetBit(kGeoMatrixOwned);
+      } else {
+         if (!TestBit(kGeoMatrixOwned)) {
+            fRotation = new TGeoRotation();
+            SetBit(kGeoMatrixOwned);
+         }
+      }
+      fRotation->SetMatrix(matrix.GetRotationMatrix());
+      fRotation->SetBit(kGeoReflection, matrix.TestBit(kGeoReflection));
+      fRotation->SetBit(kGeoRotation);
+   } else {
+      if (fRotation && TestBit(kGeoMatrixOwned)) delete fRotation;
+      ResetBit(kGeoMatrixOwned);
+      fRotation = 0;
+   }
+   SetBit(kGeoRegistered,registered);
+   return *this;
+}
+TGeoCombiTrans &TGeoCombiTrans::operator=(const TGeoCombiTrans &matrix)
 {
    if (&matrix == this) return *this;
    Bool_t registered = TestBit(kGeoRegistered);
