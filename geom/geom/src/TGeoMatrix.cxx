@@ -1728,8 +1728,8 @@ TGeoCombiTrans &TGeoCombiTrans::operator=(const TGeoMatrix &matrix)
 {
    if (&matrix == this) return *this;
    Bool_t registered = TestBit(kGeoRegistered);
-   TNamed::operator=(matrix);
    Clear();
+   TNamed::operator=(matrix);
 
    if (matrix.IsTranslation()) {
       SetBit(kGeoTranslation);
@@ -1761,8 +1761,8 @@ TGeoCombiTrans &TGeoCombiTrans::operator=(const TGeoCombiTrans &matrix)
 {
    if (&matrix == this) return *this;
    Bool_t registered = TestBit(kGeoRegistered);
-   TNamed::operator=(matrix);
    Clear();
+   TNamed::operator=(matrix);
 
    if (matrix.IsTranslation()) {
       SetBit(kGeoTranslation);
