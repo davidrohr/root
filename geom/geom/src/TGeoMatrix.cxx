@@ -230,6 +230,11 @@ ClassImp(TGeoMatrix);
 
 TGeoMatrix::TGeoMatrix()
 {
+    ResetBit(kGeoRotation);
+    ResetBit(kGeoScale);
+    ResetBit(kGeoIdentity);
+    ResetBit(kGeoTranslation);
+    ResetBit(kGeoReflection);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
